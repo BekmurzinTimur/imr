@@ -1,0 +1,29 @@
+.App {
+  text-align: center;
+}
+.header {
+  h1 {
+    margin: 0; 
+  }
+}
+h2 {
+  margin: 0;
+}
+.nav {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  label {
+    margin: 5px 10px;
+  }
+}
+
+.chart_wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.country_chart {
+  margin: 0 auto;
+}
