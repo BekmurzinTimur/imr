@@ -1,10 +1,11 @@
 import React from 'react';
 import './App.scss';
 import '../node_modules/react-vis/dist/style.css';
-import {XYPlot, VerticalBarSeries,VerticalGridLines,HorizontalGridLines,XAxis,YAxis} from 'react-vis';
+import {XYPlot, VerticalBarSeries,VerticalGridLines,HorizontalGridLines,XAxis,YAxis, DiscreteColorLegend} from 'react-vis';
 import MortalityRateRaw from './Assets/mortality_rate.json';
 import Header from './Header/Header';
 import Info from './Info/Info';
+import CountryCard from './CountryCard/CountryCard';
 let mortality_rate = [[],[],[],[],[],[],[],[]];
 let data = [];
 let countryData = []; // Array of countrys for block Info
@@ -66,7 +67,9 @@ class App extends React.Component{
         Year: '2010',
         Sort: 'Name',
         Search: ''
-    }
+    },
+      visualization1: true,
+      cardFilter: ''
     };
   }
   updateTips = (newFilters) => {
@@ -76,6 +79,7 @@ class App extends React.Component{
   sortSample = (sortType) => {
     setCurrentArray(this.state.curFilters.Year);
     currentIMRSample = Object.assign([], filterArray(currentIMRSample, this.state.curFilters.Search));
+    
     let Uncertainty = this.state.curFilters.Uncertainty;
     if (sortType === "ascending")
     currentIMRSample.sort(function(a,b) {
@@ -98,32 +102,87 @@ class App extends React.Component{
   }
 
   //Info block
-  
-  addCountry = (index) => {
-    if (countryData.length < 11)
-    countryData.push(currentIMRSample[index]);
+  toggleVisualization = () => {
+    const oldState = this.state.visualization1;
+    this.setState({visualization1: !oldState});
+  }
+  // Viz #2
+  collectCountryInfo = (index) => {
+    let countryInfo = {
+      Lower: [],
+      Median: [],
+      Upper: [],
+      ISOcode: mortality_rate[0][index].ISOcode,
+      name: mortality_rate[0][index].name
+    }
+    for (let i = 0; i <= 7; i++)
+    {
+      countryInfo.Lower[i] = mortality_rate[i][index].Lower;
+      countryInfo.Median[i] = mortality_rate[i][index].Median;
+      countryInfo.Upper[i] = mortality_rate[i][index].Upper;
+    }
+    return countryInfo;
   }
 
+  
+  makeCards = () => {
+    let searchKey = this.state.cardFilter.toLowerCase();
+    let rows = [];
+    if (this.state.visualization1 === false)
+    {
+      for (let i = 0; i < 196; i++) {
+        let countryName = mortality_rate[0][i].name.toLowerCase()
+        if (countryName.includes(searchKey))
+        rows.push(<CountryCard key={i} countryInfo={this.collectCountryInfo(i)}/>);
+      }
+    }
+    return <div className="cards_wrapepr">{rows}</div>
+  }
+  
+  cardSearch = () => {
+    return (<div>
+      <label htmlFor="cardsearch">Search
+        <input type="text" placeholder="Type country name" id="cardsearch" onChange={(e) => {
+          this.setState({cardFilter: e.target.value});
+        }}></input>
+      </label>
+    </div>)
+  }
+  filterCards(event) {
+    filterArray()
+  }
 render() {
   const { index } = this.state;
   this.sortSample(this.state.curFilters.Sort);
   setData(currentIMRSample, this.state.curFilters);
   return (
     <div className="App">
-      <Header updateTips={this.updateTips}/>
-      <div className="chart_wrapper">
-        <XYPlot height={250} width={Math.max(200,30.61*currentIMRSample.length) } xType="ordinal" className="main_chart" yDomain={[0, 145]}>
-          <VerticalGridLines />
-          <HorizontalGridLines />
-          <XAxis />
-          <YAxis />
-          <VerticalBarSeries data={data} 
-           onNearestX={(d, {index}) => this.setState({ index })}
-           onValueClick={(datapoint, event)=>{this.addCountry(index)}}
-          />
-        </XYPlot>
-      </div>
-      {<Info countryInfo={currentIMRSample[index]} countryData={countryData}/>}
+      <button className='toggle_button' onClick={this.toggleVisualization}>Toggle visualization</button>
+      {this.state.visualization1 === true ? <div>
+        <Header updateTips={this.updateTips}/>
+        <div className="chart_wrapper">
+          <XYPlot height={250} width={Math.max(200,30.61*currentIMRSample.length) } xType="ordinal" className="main_chart" yDomain={[0, 145]}>
+            <VerticalGridLines />
+            <HorizontalGridLines />
+            <XAxis />
+            <YAxis />
+            <VerticalBarSeries data={data} 
+             onNearestX={(d, {index}) => this.setState({ index })}
+            />
+          </XYPlot>
+        </div>
+        <Info countryInfo={currentIMRSample[index]} countryData={countryData}/>
+        </div>
+        : <div>
+          {this.cardSearch()}
+          <DiscreteColorLegend 
+                items={[{title: 'Lower', strokeWidth:4}, 
+                {title: 'Median', strokeWidth:4}, 
+                {title: 'Upper', strokeWidth:4}]}
+                orientation="horizontal"/>
+          {this.makeCards()}
+        </div> 
+      }
     </div>
   );
 }

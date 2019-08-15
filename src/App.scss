@@ -27,3 +27,22 @@ h2 {
 .country_chart {
   margin: 0 auto;
 }
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.cards_card {
+  display: inline-block;
+  margin: 0;
+  width: 350px;
+}
+
+.toggle_button {
+  position: absolute;
+  left: 0;
+  top: 0;
+}

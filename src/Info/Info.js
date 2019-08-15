@@ -5,20 +5,11 @@ function Info(props) {
     let CountryName = "Blank";
     let yDomainBottom = 0;
     let yDomainTop= 0;
-    let countryData = [];
     let myData = [
         {x: 'Lower', y: 0},
         {x: 'Median', y: 0},
         {x: 'Upper', y: 0},
     ];
-
-    let myData2 = [
-      {x: 'Lower', y: 0},
-      {x: 'Median', y: 0},
-      {x: 'Upper', y: 0},
-  ];
-    if (props.countryData !== undefined)    
-    countryData = Object.assign([], props.countryData);
 
     if (props.countryInfo !== undefined)
     { 
@@ -31,17 +22,6 @@ function Info(props) {
           {x: 'Upper', y: props.countryInfo.Upper},
       ];
     }
-
-    let LineSeries = (<div>{ countryData.map(country => {
-      let newData = [
-        {x: 'Lower', y: country.Lower},
-        {x: 'Median', y: country.Median},
-        {x: 'Upper', y: country.Upper},
-      ]
-
-      return //<LineMarkSeries data={newData} />
-    })
-    }</div>)
 
     return (
       <div className="info_wrapper">
@@ -57,10 +37,7 @@ function Info(props) {
                 }}/>
                 <XAxis />
                 <YAxis />
-                <LineMarkSeries data={myData} 
-                className="linemark-series-example"/>
-                <LineMarkSeries data={myData2} 
-                className="linemark-series-example-2"/>
+                <LineMarkSeries data={myData}/>
             </XYPlot>
       </div>
     );
