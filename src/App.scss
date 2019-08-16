@@ -1,24 +1,37 @@
-.App {
+ .App {
+  padding: 0;
+  margin: 0;
+  width: 100%;
   text-align: center;
+  overflow-x: hidden;
 }
+
 .header {
+  width: 100%;
+  overflow-x: hidden;
   h1 {
     margin: 0; 
   }
 }
+
 h2 {
   margin: 0;
 }
+
 .nav {
   margin: 0 auto;
+  width: 100%;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   label {
     margin: 5px 10px;
   }
+  overflow-x: hidden;
 }
 
 .chart_wrapper {
+  width: 100%;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
@@ -41,8 +54,42 @@ h2 {
   width: 350px;
 }
 
-.toggle_button {
-  position: absolute;
-  left: 0;
-  top: 0;
+.active_element {
+  padding: 5px 10px;
+  background-color: white;
+  border: 2px solid rgb(41, 140, 173);
+  outline: none;
+  &:hover {
+    cursor: pointer;
+    background-color: rgb(41, 140, 173);
+    color: white;
+  }
+  &:active {
+    background-color: rgb(15, 93, 119);
+  }
+}
+
+input, select {
+  margin-left: 10px;
+}
+
+
+
+@media screen and (max-width: 767px) {
+  h1 {
+    font-size: 24px;
+  }
+  
+  label {
+    font-size: 12px;
+  }
+
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .country_chart {
+    margin: 0;
+  }
 }

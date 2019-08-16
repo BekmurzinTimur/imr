@@ -26,7 +26,7 @@ function Info(props) {
     return (
       <div className="info_wrapper">
           <h2>{CountryName}</h2>
-            <XYPlot height={200} width={350} yType="linear" xType="ordinal" className="country_chart" yDomain={[yDomainBottom,yDomainTop]}>
+            <XYPlot height={200} width={320} yType="linear" xType="ordinal" className="country_chart" yDomain={[yDomainBottom,yDomainTop]}>
                 <VerticalGridLines />
                 <HorizontalGridLines />
                 <Borders style={{
